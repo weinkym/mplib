@@ -20,8 +20,11 @@ HEADERS  += mainwindow.h
 FORMS    += mainwindow.ui
 
 
-LIBS +=   -L../../../../../lib -lmplib
+LIBS +=   -L../../lib -lmplib
 #contains(QMAKE_CC,cl){
 #-LD:/workroot/lib
 #}
 INCLUDEPATH += ../../include
+
+RESOURCES += \
+    source.qrc

@@ -30,7 +30,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-//    ZStringWheelWidget* m_wheelWidget;
+#if QT_VERSION > QT_VERSION_CHECK(5, 0, 0)
+    ZStringWheelWidget* m_wheelWidget;
+#endif
 //    ZScreenshotDlg m_screenShot;
 };
 

@@ -6,8 +6,11 @@
 #include <QTextEdit>
 #include "mplib.h"
 static QTextEdit* g_textEdit = NULL;
-
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 void ZMsgHandler(QtMsgType type, const char *msg)
+#else
+void ZMsgHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+#endif
 {
     QDir dir(qApp->applicationDirPath());
     if(!dir.exists("log"))
@@ -204,7 +207,7 @@ QStringList Mplib::MpStaticMethod::getPrinters()
             USES_CONVERSION;
             std::string  str( W2A(pPrnInfo-> pPrinterName)) ;
             list.append(str.c_str());
-            pPrnInfo++;//Ö¸ÕëºóÒÆ
+            pPrnInfo++;//æŒ‡é’ˆåç§»
         }
     }
     delete []pBuffer;
@@ -241,11 +244,11 @@ bool Mplib::MpStaticMethod::setDefaultPrinter(const QString &name)
     {
         result = false;
     }
-    qDebug()<<"ÉèÖÃÄ¬ÈÏ´òÓ¡»ú"<< (result ? "³É¹¦":"Ê§°Ü");
+    qDebug()<<"è®¾ç½®é»˜è®¤æ‰“å°æœº"<< (result ? "æˆåŠŸ":"å¤±è´¥");
     return result;
 }
 
-//==¿ÉÀ©³ä,ĞŞ¸Äpi2->pDevMode¶ÔÓ¦µÄ²ÎÊı¼´¿É,µ«ĞèpDevMode->dmFieldsËùÖ§³Ö
+//==å¯æ‰©å……,ä¿®æ”¹pi2->pDevModeå¯¹åº”çš„å‚æ•°å³å¯,ä½†éœ€pDevMode->dmFieldsæ‰€æ”¯æŒ
 bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize, short width, short height, short orientation, short copies)
 {
     HANDLE hPrinter = NULL;
@@ -270,7 +273,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     bFlag = OpenPrinter(A2W(pName.toLocal8Bit().data()), &hPrinter, &pd);
     if (!bFlag || (hPrinter == NULL))
     {
-        qDebug()<<QString("´òÓ¡»ú<%1>´ò¿ªÊ§°Ü").arg(pName);
+        qDebug()<<QString("æ‰“å°æœº<%1>æ‰“å¼€å¤±è´¥").arg(pName);
         return false;
     }
     // The first GetPrinter tells you how big the buffer should be in
@@ -283,7 +286,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
          (dwNeeded == 0))
     {
         ClosePrinter(hPrinter);
-        qDebug()<<QString("»ñÈ¡´òÓ¡»ú<%1>ĞÅÏ¢Ê§°Ü<%2>").arg(pName).arg(GetLastError());
+        qDebug()<<QString("è·å–æ‰“å°æœº<%1>ä¿¡æ¯å¤±è´¥<%2>").arg(pName).arg(GetLastError());
         return false;
     }
     // Allocate enough space for PRINTER_INFO_2...
@@ -291,7 +294,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     if (pi2 == NULL)
     {
         ClosePrinter(hPrinter);
-        qDebug()<<QString("»ñÈ¡´òÓ¡»ú<%1>ĞÅÏ¢Ê±£¬ÉêÇë²»µ½×ã¹»µÄ¿Õ¼ä").arg(pName);
+        qDebug()<<QString("è·å–æ‰“å°æœº<%1>ä¿¡æ¯æ—¶ï¼Œç”³è¯·ä¸åˆ°è¶³å¤Ÿçš„ç©ºé—´").arg(pName);
         return false;
     }
     // The second GetPrinter fills in all the current settings, so all you
@@ -301,7 +304,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     {
         GlobalFree(pi2);
         ClosePrinter(hPrinter);
-        qDebug()<<QString("»ñÈ¡´òÓ¡»ú<%1>Ä¬ÈÏĞÅÏ¢Ê§°Ü").arg(pName);
+        qDebug()<<QString("è·å–æ‰“å°æœº<%1>é»˜è®¤ä¿¡æ¯å¤±è´¥").arg(pName);
         return false;
     }
     // If GetPrinter didn't fill in the DEVMODE, try to get it by calling
@@ -315,7 +318,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
         {
             GlobalFree(pi2);
             ClosePrinter(hPrinter);
-            qDebug()<<QString("»ñÈ¡´òÓ¡»ú<%1>ĞÅÏ¢Ê§°Ü,error<429>").arg(pName);
+            qDebug()<<QString("è·å–æ‰“å°æœº<%1>ä¿¡æ¯å¤±è´¥,error<429>").arg(pName);
             return false;
         }
 
@@ -324,7 +327,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
         {
             GlobalFree(pi2);
             ClosePrinter(hPrinter);
-            qDebug()<<QString("»ñÈ¡´òÓ¡»ú<%1>ĞÅÏ¢Ê§°Ü,error<438>").arg(pName);
+            qDebug()<<QString("è·å–æ‰“å°æœº<%1>ä¿¡æ¯å¤±è´¥,error<438>").arg(pName);
             return false;
         }
 
@@ -337,7 +340,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
             GlobalFree(pDevMode);
             GlobalFree(pi2);
             ClosePrinter(hPrinter);
-            qDebug()<<QString("»ñÈ¡´òÓ¡»ú<%1>ĞÅÏ¢Ê§°Ü,error<451>").arg(pName);
+            qDebug()<<QString("è·å–æ‰“å°æœº<%1>ä¿¡æ¯å¤±è´¥,error<451>").arg(pName);
             return false;
         }
 
@@ -348,10 +351,10 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     bool result = true;
     // Driver is reporting that it doesn't support this change...
     // Specify exactly what we are attempting to change...
-    //ÅĞ¶Ï´ËÊìÏ¤ÊÇ·ñÖ§³Ö
+    //åˆ¤æ–­æ­¤ç†Ÿæ‚‰æ˜¯å¦æ”¯æŒ
     if (!(pi2->pDevMode->dmFields & DM_ORIENTATION))
     {
-        qDebug()<<QString("´òÓ¡»ú<%1>²»Ö§³ÖĞŞ¸Ä<×İºáÏò>").arg(pName);
+        qDebug()<<QString("æ‰“å°æœº<%1>ä¸æ”¯æŒä¿®æ”¹<çºµæ¨ªå‘>").arg(pName);
         result = false;
     }
     else
@@ -363,7 +366,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     {
         if (!(pi2->pDevMode->dmFields & DM_PAPERSIZE))
         {
-            qDebug()<<QString("´òÓ¡»ú<%1>²»Ö§³ÖĞŞ¸Ä<Ö½ÕÅ¹æ¸ñ>").arg(pName);
+            qDebug()<<QString("æ‰“å°æœº<%1>ä¸æ”¯æŒä¿®æ”¹<çº¸å¼ è§„æ ¼>").arg(pName);
             result = false;
         }
         else
@@ -375,7 +378,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     {
         if (!(pi2->pDevMode->dmFields & DM_PAPERWIDTH))
         {
-            qDebug()<<QString("´òÓ¡»ú<%1>²»Ö§³ÖĞŞ¸Ä<Ö½ÕÅ¿í¶È>").arg(pName);
+            qDebug()<<QString("æ‰“å°æœº<%1>ä¸æ”¯æŒä¿®æ”¹<çº¸å¼ å®½åº¦>").arg(pName);
             result = false;
         }
         else
@@ -385,7 +388,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
 
         if (!(pi2->pDevMode->dmFields & DM_PAPERLENGTH))
         {
-            qDebug()<<QString("´òÓ¡»ú<%1>²»Ö§³ÖĞŞ¸Ä<Ö½ÕÅ³¤¶È>").arg(pName);
+            qDebug()<<QString("æ‰“å°æœº<%1>ä¸æ”¯æŒä¿®æ”¹<çº¸å¼ é•¿åº¦>").arg(pName);
             result = false;
         }
         else
@@ -396,7 +399,7 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
 
     if (!(pi2->pDevMode->dmFields & DM_COPIES))
     {
-        qDebug()<<QString("´òÓ¡»ú<%1>²»Ö§³ÖĞŞ¸Ä<´òÓ¡·İÊı>").arg(pName);
+        qDebug()<<QString("æ‰“å°æœº<%1>ä¸æ”¯æŒä¿®æ”¹<æ‰“å°ä»½æ•°>").arg(pName);
         result = false;
     }
     else
@@ -447,4 +450,3 @@ bool Mplib::MpStaticMethod::setPrinterParam(const QString &pName, short pagesize
     return result;
 }
 #endif
-

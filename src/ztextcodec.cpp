@@ -20,7 +20,7 @@ void ZTextCodec::init(const QString& codecName)
 }
 
 /*!
-    ���ص�ǰϵͳ�����е��ַ����뼯��
+    返回当前系统中所有的字符编码集。
 */
 QMap<QString, QTextCodec*> ZTextCodec::findCodecs()
 {

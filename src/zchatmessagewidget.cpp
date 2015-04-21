@@ -47,7 +47,7 @@ bool ZChatMessageWidget::insertImage(const QString &fileName)
 //    QUrl url();
 //    document->addResource(QTextDocument::ImageResource, QUrl(fileName),  QVariant(image));
 
-    //²åÈëÍ¼Ïñ£¬Ê¹ÓÃQTextCursor APIÎÄµµ£º
+    //æ’å…¥å›¾åƒï¼Œä½¿ç”¨QTextCursor APIæ–‡æ¡£ï¼š
     QTextImageFormat image_format;
     image_format.setName(fileName);
     cursor.insertImage(image_format);
@@ -83,18 +83,18 @@ void ZChatMessageWidget::addText(const QString &text, bool isSend)
 
 void ZChatMessageWidget::addTimeText()
 {
-    QTextCharFormat fmt;//ÎÄ±¾×Ö·û¸ñÊ½
-    fmt.setForeground(m_timeTextColor);// Ç°¾°É«(¼´×ÖÌåÉ«)ÉèÎªcolÉ«
+    QTextCharFormat fmt;//æ–‡æœ¬å­—ç¬¦æ ¼å¼
+    fmt.setForeground(m_timeTextColor);// å‰æ™¯è‰²(å³å­—ä½“è‰²)è®¾ä¸ºcolè‰²
     fmt.setFont(m_timeTextFont);
     fmt.setBackground(m_timeTextBackgroundColor);
-    QTextCursor cursor = this->textCursor();//»ñÈ¡ÎÄ±¾¹â±ê
-    cursor.mergeCharFormat(fmt);//¹â±êºóµÄÎÄ×Ö¾ÍÓÃ¸Ã¸ñÊ½ÏÔÊ¾
-    this->mergeCurrentCharFormat(fmt);//textEditÊ¹ÓÃµ±Ç°µÄ×Ö·û¸ñÊ½
+    QTextCursor cursor = this->textCursor();//è·å–æ–‡æœ¬å…‰æ ‡
+    cursor.mergeCharFormat(fmt);//å…‰æ ‡åçš„æ–‡å­—å°±ç”¨è¯¥æ ¼å¼æ˜¾ç¤º
+    this->mergeCurrentCharFormat(fmt);//textEditä½¿ç”¨å½“å‰çš„å­—ç¬¦æ ¼å¼
     append(QDateTime::currentDateTime().toString("yyyy-M-d h:m:s"));
 
-    fmt.setForeground(m_textColor);// Ç°¾°É«(¼´×ÖÌåÉ«)ÉèÎªcolÉ«
+    fmt.setForeground(m_textColor);// å‰æ™¯è‰²(å³å­—ä½“è‰²)è®¾ä¸ºcolè‰²
     fmt.setFont(m_textFont);
     fmt.setBackground(m_textBackgroundColor);
-    this->mergeCurrentCharFormat(fmt);//textEditÊ¹ÓÃµ±Ç°µÄ×Ö·û¸ñÊ½
+    this->mergeCurrentCharFormat(fmt);//textEditä½¿ç”¨å½“å‰çš„å­—ç¬¦æ ¼å¼
 }
 

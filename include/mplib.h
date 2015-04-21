@@ -5,7 +5,12 @@
 #include "mplib_global.h"
 
 class QTextEdit;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 void MPLIBSHARED_EXPORT ZMsgHandler(QtMsgType, const char *);
+#else
+void MPLIBSHARED_EXPORT ZMsgHandler(QtMsgType, const QMessageLogContext &, const QString &);
+#endif
+
 void MPLIBSHARED_EXPORT ZSetMsgHandlerDevice(QTextEdit* textEdit);
 
 namespace Mplib
@@ -24,8 +29,8 @@ public:
     static QStringList getPrinters();
     static QString getDefaultPrinter();
     static bool setDefaultPrinter(const QString& name);
-    //pName:´òÓ¡»úÃû³Æ pagesize:Ö½ÕÅ¹æ¸ñ,8ÎªA3,9ÎªA4,¾ßÌå¼û<wingdi.h> width:Ö½ÕÅ¿í¶È height:Ö½ÕÅ¸ß¶È,orientation:0ºáÏß,1×İÏò¡¡copies:´òÓ¡·İÊı
-    //×¢Òâ:µ±pagesize <= 0Ê±,²ÎÊıwidth¡¢heightÁ½¸ö²ÎÊı²ÅÓĞĞ§
+    //pName:æ‰“å°æœºåç§° pagesize:çº¸å¼ è§„æ ¼,8ä¸ºA3,9ä¸ºA4,å…·ä½“è§<wingdi.h> width:çº¸å¼ å®½åº¦ height:çº¸å¼ é«˜åº¦,orientation:0æ¨ªçº¿,1çºµå‘ã€€copies:æ‰“å°ä»½æ•°
+    //æ³¨æ„:å½“pagesize <= 0æ—¶,å‚æ•°widthã€heightä¸¤ä¸ªå‚æ•°æ‰æœ‰æ•ˆ
     static bool setPrinterParam(const QString& pName,short pagesize, short width,short height,short orientation,short copies);
 #endif
 };

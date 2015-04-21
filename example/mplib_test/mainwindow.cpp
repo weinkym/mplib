@@ -79,7 +79,7 @@ void MainWindow::testScreenShot()
     if(dlg.exec() == QDialog::Accepted)
     {
 //        ui->label->setPixmap(dlg.getSelectedImg());
-        ui->label->setPixmap(QApplication::clipboard()->pixmap());
+        ui->label->setPixmap(QApplication::clipboard()->pixmap().scaled(111,200));
     }
 }
 

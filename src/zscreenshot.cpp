@@ -22,6 +22,7 @@
 #include <QClipboard>
 
 #include "zscreenshot.h"
+#include "zmplibpublic.h"
 
 ZScreenshotDlg::ZScreenshotDlg(QWidget *parent):QDialog(parent,Qt::FramelessWindowHint|Qt::Tool|Qt::WindowStaysOnTopHint)
 {
@@ -35,8 +36,8 @@ ZScreenshotDlg::ZScreenshotDlg(QWidget *parent):QDialog(parent,Qt::FramelessWind
     WId id = qApp->desktop()->winId();
     QRect rect = QRect(m_x,m_y,m_width,m_height).normalized();
     qDebug()<<rect.width();
-    QPixmap pix = QPixmap();
-    pix = QPixmap::grabWindow(id,rect.x(),rect.y(),rect.width(),rect.height());
+    QPixmap pix = ZMplibPublic::getFullScreen().copy(rect);
+//    pix = QPixmap::grabWindow(id,rect.x(),rect.y(),rect.width(),rect.height());
     m_editor = new ZScreenEditor(pix,this);
     m_editor->hide();
     connect(m_editor,SIGNAL(sigReset()),this,SLOT(onSigReset()));
@@ -53,6 +54,7 @@ void ZScreenshotDlg::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e);
     QPainter painter(this);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
     painter.drawImage(rect(),m_bgImg);
 }
 
@@ -67,7 +69,7 @@ void ZScreenshotDlg::drawWindow()
     painter.setPen(pen);
     painter.fillRect(m_x,m_y,m_width,m_height,Qt::transparent);
     painter.drawRect(m_x - penWidth,m_y - penWidth,m_width + 2 * penWidth,m_height + 2 * penWidth);
-    repaint();//¼´Ê±Ç¿ÖÆÖØ»æ
+    repaint();//å³æ—¶å¼ºåˆ¶é‡ç»˜
 }
 
 void ZScreenshotDlg::mouseMoveEvent(QMouseEvent *e)
@@ -123,12 +125,9 @@ void ZScreenshotDlg::mouseReleaseEvent(QMouseEvent *e)
     {
         m_bGrabing = false;
         setCursor(Qt::ArrowCursor);
-        WId id = qApp->desktop()->winId();
         QRect rect = QRect(m_x,m_y,m_width,m_height).normalized();
         qDebug()<<rect.width();
-        QPixmap pix = QPixmap();
-        pix = QPixmap::grabWindow(id,rect.x(),rect.y(),rect.width(),rect.height());
-//        ImageEditor* editor = new ImageEditor(QPixmap(),this);
+        QPixmap pix = ZMplibPublic::getFullScreen().copy(rect);
         m_editor->resetByImg(pix);
         m_editor->move(rect.topLeft());
         m_editor->show();
@@ -189,7 +188,7 @@ void ZScreenEditor::initToolBar(){
     penBtn->setCursor(Qt::ArrowCursor);
     toolBar->addWidget(penBtn);
     penBtn->setCheckable(true);
-    penBtn->setToolTip(tr("»­±Ê"));
+    penBtn->setToolTip(tr("ç”»ç¬”"));
     group->addButton(penBtn);
     connect(penBtn,SIGNAL(clicked()),this,SLOT(curOptionChanged()));
 
@@ -204,7 +203,7 @@ void ZScreenEditor::initToolBar(){
     circleBtn->setIcon(icon);
     circleBtn->setCheckable(true);
     circleBtn->setCursor(Qt::ArrowCursor);
-    circleBtn->setToolTip(tr("ÍÖÔ²¹¤¾ß"));
+    circleBtn->setToolTip(tr("æ¤­åœ†å·¥å…·"));
     group->addButton(circleBtn);
     toolBar->addWidget(circleBtn);
     connect(circleBtn,SIGNAL(clicked()),this,SLOT(curOptionChanged()));
@@ -216,7 +215,7 @@ void ZScreenEditor::initToolBar(){
     rectBtn->setIcon(icon);
     rectBtn->setCheckable(true);
     rectBtn->setCursor(Qt::ArrowCursor);
-    rectBtn->setText(tr("¾ØÐÎ¹¤¾ß"));
+    rectBtn->setText(tr("çŸ©å½¢å·¥å…·"));
     group->addButton(rectBtn);
     toolBar->addWidget(rectBtn);
     connect(rectBtn,SIGNAL(clicked()),this,SLOT(curOptionChanged()));
@@ -225,14 +224,14 @@ void ZScreenEditor::initToolBar(){
     icon = QIcon(":/images/undo.png");
     undoBtn->setIcon(icon);
     undoBtn->setCursor(Qt::ArrowCursor);
-    undoBtn->setToolTip(tr("³·Ïú"));
+    undoBtn->setToolTip(tr("æ’¤é”€"));
     toolBar->addWidget(undoBtn);
     connect(undoBtn,SIGNAL(clicked()),this,SLOT(undo()));
 
     saveAsBtn = new QToolButton;
     icon = QIcon(":/images/saveas.png");
     saveAsBtn->setIcon(icon);
-    saveAsBtn->setToolTip(tr("Áí´æÎª"));
+    saveAsBtn->setToolTip(tr("å¦å­˜ä¸º"));
     saveAsBtn->setCursor(Qt::ArrowCursor);
     toolBar->addWidget(saveAsBtn);
     connect(saveAsBtn,SIGNAL(clicked()),this,SLOT(saveAs()));
@@ -242,13 +241,13 @@ void ZScreenEditor::initToolBar(){
     cancelBtn->setIcon(icon);
     cancelBtn->setCursor(Qt::ArrowCursor);
     toolBar->addWidget(cancelBtn);
-    cancelBtn->setToolTip(tr("È¡Ïû"));
+    cancelBtn->setToolTip(tr("å–æ¶ˆ"));
     connect(cancelBtn,SIGNAL(clicked()),this,SLOT(onCancelBtnClicked()));
 
     completeBtn = new QToolButton;
     icon = QIcon(":/images/complete.png");
     completeBtn->setIcon(icon);
-    completeBtn->setToolTip(tr("È·¶¨"));
+    completeBtn->setToolTip(tr("ç¡®å®š"));
     completeBtn->setCursor(Qt::ArrowCursor);
     toolBar->addWidget(completeBtn);
     connect(completeBtn,SIGNAL(clicked()),this,SLOT(onCompleteBtnClicked()));

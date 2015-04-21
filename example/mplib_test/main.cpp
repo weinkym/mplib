@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     w.testScreenShot();
 //    ZSwitchButton btn;
 //    btn.show();
+    w.show();
 
     return a.exec();
 }

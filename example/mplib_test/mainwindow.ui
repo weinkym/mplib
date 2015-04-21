@@ -20,6 +20,9 @@
       <property name="text">
        <string>TextLabel</string>
       </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
@@ -77,7 +80,7 @@
      <x>0</x>
      <y>0</y>
      <width>672</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

@@ -6,28 +6,26 @@
 TARGET_NAME = mplib
 DEFINES_NAME = MPLIB_LIBRARY
 ###############################################################################
-#CONFIG += static
+mac{
+CONFIG += static
+}
 TARGET = $${TARGET_NAME}
 ###############################################################################
 QT       += network
 ###############################################################################
 DEFINES += $${DEFINES_NAME}
 ###############################################################################
-contains(DEFINES, $${DEFINES_NAME}) {
-message(DEFINES_NAME)
 TEMPLATE = lib
-DESTDIR  = ../../../lib
-message($${DESTDIR})
-}else{
-message(TTTTTT)
-}
+
 ###############################################################################
 win32 {
 CONFIG(debug, debug|release): OBJECTS_DIR = ../../../TEMP/$${TARGET}/debug
 CONFIG(release, debug|release): OBJECTS_DIR = ../../../TEMP/$${TARGET}/release
 CONFIG(debug, debug|release) : TARGET = $${TARGET_NAME}d
+DESTDIR  = ../../../lib
 } else {
-OBJECTS_DIR = ../../../TEMP/$${TARGET}
+OBJECTS_DIR = ./TEMP/$${TARGET}
+DESTDIR  = ./lib
 }
 ###############################################################################
 UI_DIR      = $${OBJECTS_DIR}/uic
@@ -36,14 +34,14 @@ RCC_DIR     = $${OBJECTS_DIR}/rcc
 INCLUDEPATH += $${OBJECTS_DIR}/uic
 
 #VERSION########################################################################
-# VERSION>4.7 º¥4.8“‘…œ
+# VERSION>4.7 Âç≥4.8‰ª•‰∏ä
 greaterThan(QT_MAJOR_VERSION, 4) {
 QT += widgets
 DEFINES += NEED_VERSION_4_8
 } else {
 greaterThan(QT_MAJOR_VERSION, 3) {
 greaterThan(QT_MINOR_VERSION, 7) {
-#4.8.4√≤À∆≤ª÷ß≥÷
+#4.8.4Ë≤å‰ºº‰∏çÊîØÊåÅ
 #DEFINES += NEED_VERSION_4_8
 }}}
 contains(DEFINES,NEED_VERSION_4_8){
@@ -70,7 +68,8 @@ HEADERS += \
     include/zchatmessagewidget.h \
     include/mplib.h \
     include/zscreenshot.h \
-    include/zswitchbutton.h
+    include/zswitchbutton.h \
+    include/zmplibpublic.h
 #SOURCES#####################################################################
 SOURCES += \
     src/ztextcodec.cpp \
@@ -78,7 +77,8 @@ SOURCES += \
     src/zchatmessagewidget.cpp \
     src/mplib.cpp \
     src/zscreenshot.cpp \
-    src/zswitchbutton.cpp
+    src/zswitchbutton.cpp \
+    src/zmplibpublic.cpp
 #FORMS#####################################################################
 FORMS += \
     ./ui/zrecieveprogressbar.ui
